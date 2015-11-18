@@ -13,6 +13,8 @@ function game_init()
   game.enemy = {};
   game.enemy.char = "x";
 
+  game.user = "";
+
   grid_set = new Array();
 
   for(var i = 0; i < 9; i++)
@@ -24,6 +26,8 @@ function game_init()
     g.display = document.querySelector('#board .grid [data-grid="' + i + '"]');
     grid_set.push(g);
   }
+
+  game.user = "PLAYER";
 
   grid_interact();
 }
@@ -42,6 +46,8 @@ function grid_interact()
       }
 
   }
+
+  game.user === "PLAYER";
 }
 
 function grid_deinteract(all, box)
@@ -50,10 +56,15 @@ function grid_deinteract(all, box)
   {
     for(var i = 0; i < grid_set.length; i++)
     {
-      var box = grid_set[i].display;
+      var g = grid_set[i];
+      var box = g.display;
 
-      box.classList.remove("ox-interact");
-      box.removeEventListener("click", grid_interact_event, false);
+      if(!g.populated)
+      {
+        box.classList.remove("ox-interact");
+        box.removeEventListener("click", grid_interact_event, false);
+      }
+
     }
   }
 
@@ -72,11 +83,11 @@ function grid_interact_event(event)
 
   box.querySelector(".character").classList.add("character-" + game.player.char);
 
-  grid_deinteract(false, box);
+  grid_deinteract(true, null);
+
+  box.querySelector(".character").addEventListener("animationend", grid_update, false);
 
   grid_register(box, game.player);
-
-  enemy_move();
 }
 
 function grid_register(box, userObject)
@@ -98,9 +109,17 @@ function grid_register(box, userObject)
   trace(targetBox);
 }
 
-function grid_update()
+function grid_update(event)
 {
+  if(game.user === "PLAYER")
+  {
+    enemy_move();
+  }
 
+  if(game.user === "ENEMY")
+  {
+    grid_interact();
+  }
 }
 
 
@@ -121,12 +140,16 @@ function enemy_move()
         }
     }
 
+  game.user === "ENEMY";
+
   moveSelect = Math.floor(Math.random() * moveList.length);
   box = moveList[moveSelect].display;
 
   box.querySelector(".character").classList.add("character-" + game.enemy.char);
 
   grid_deinteract(false, box);
+
+  box.querySelector(".character").addEventListener("animationend", grid_update, false);
 
   grid_register(box, game.enemy);
 
