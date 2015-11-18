@@ -15,6 +15,8 @@ function game_init()
 
   game.user = "";
 
+  game.targetBox = null;
+
   grid_set = new Array();
 
   for(var i = 0; i < 9; i++)
@@ -27,13 +29,13 @@ function game_init()
     grid_set.push(g);
   }
 
-  game.user = "PLAYER";
-
   grid_interact();
 }
 
 function grid_interact()
 {
+  game.user = "PLAYER";
+
   for(var i = 0; i < grid_set.length; i++)
   {
     var g = grid_set[i];
@@ -46,8 +48,6 @@ function grid_interact()
       }
 
   }
-
-  game.user === "PLAYER";
 }
 
 function grid_deinteract(all, box)
@@ -85,7 +85,9 @@ function grid_interact_event(event)
 
   grid_deinteract(true, null);
 
-  box.querySelector(".character").addEventListener("animationend", grid_update, false);
+  game.targetBox = box.querySelector(".character");
+
+  game.targetBox.addEventListener("animationend", grid_update, false);
 
   grid_register(box, game.player);
 }
@@ -111,12 +113,18 @@ function grid_register(box, userObject)
 
 function grid_update(event)
 {
+  trace("game.user === " + game.user);
+  trace(event.target);
+
+  game.targetBox.removeEventListener("animationend", grid_update, false);
+  game.targetBox = null;
+
   if(game.user === "PLAYER")
   {
     enemy_move();
   }
 
-  if(game.user === "ENEMY")
+  else if(game.user === "ENEMY")
   {
     grid_interact();
   }
@@ -140,7 +148,7 @@ function enemy_move()
         }
     }
 
-  game.user === "ENEMY";
+  game.user = "ENEMY";
 
   moveSelect = Math.floor(Math.random() * moveList.length);
   box = moveList[moveSelect].display;
@@ -149,7 +157,8 @@ function enemy_move()
 
   grid_deinteract(false, box);
 
-  box.querySelector(".character").addEventListener("animationend", grid_update, false);
+  game.targetBox = box.querySelector(".character");
+  game.targetBox.addEventListener("animationend", grid_update, false);
 
   grid_register(box, game.enemy);
 
