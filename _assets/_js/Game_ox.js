@@ -18,6 +18,8 @@ function main_init()
   game.enemy.who = "ENEMY";
   game.firstGo = "ENEMY";
 
+  thinking_init();
+
   game_run();
 }
 

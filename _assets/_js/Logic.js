@@ -1,3 +1,5 @@
+var thinking_arr;
+
 var Logic = function(ob)
 {
 	trace(ob);
@@ -98,4 +100,15 @@ Logic.prototype.result_translate = function()
 	{
 		game.result = "";
 	}
+}
+
+
+function thinking_init()
+{
+	thinking_arr = new Array();
+
+	thinking_arr = rom.store.moveList.data;
+
+	trace(thinking_arr);
+
 }
