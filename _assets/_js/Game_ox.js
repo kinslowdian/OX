@@ -9,13 +9,13 @@ function game_init()
   game = {};
   game.player = {};
   game.player.char = "o";
-
+  game.player.who = "PLAYER";
   game.enemy = {};
   game.enemy.char = "x";
-
+  game.enemy.who = "ENEMY";
   game.user = "";
-
   game.targetBox = null;
+  game.result = "";
 
   grid_set = new Array();
 
@@ -113,20 +113,47 @@ function grid_register(box, userObject)
 
 function grid_update(event)
 {
-  trace("game.user === " + game.user);
-  trace(event.target);
+  var status;
 
   game.targetBox.removeEventListener("animationend", grid_update, false);
   game.targetBox = null;
 
-  if(game.user === "PLAYER")
+  game.user === "PLAYER" ? status = new Logic(game.player) : status = new Logic(game.enemy);
+  status.result_check();
+  status.result_translate();
+
+  if(status.p_win)
   {
-    enemy_move();
+    if(game.result === "WIN")
+    {
+      alert("YOU WIN");
+    }
+
+    else if(game.result === "LOSE")
+    {
+      alert("YOU LOSE");
+    }
   }
 
-  else if(game.user === "ENEMY")
+  else if(status.draw)
   {
-    grid_interact();
+    alert("DRAW");
+  }
+
+  else
+  {
+    if(game.result === "" || game.result !== undefined)
+    {
+      if(game.user === "PLAYER")
+      {
+        enemy_move();
+      }
+
+      else if(game.user === "ENEMY")
+      {
+        grid_interact();
+      }
+    }
   }
 }
 
