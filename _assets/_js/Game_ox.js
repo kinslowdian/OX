@@ -233,11 +233,13 @@ function grid_refresh(event)
     }
   }
 
+  thinking_refresh();
+
   game_run();
 }
 
 
-
+/*
 function enemy_move()
 {
   var moveList = new Array();
@@ -269,6 +271,12 @@ function enemy_move()
 
   grid_register(box, game.enemy);
 
+}
+*/
+
+function  enemy_move()
+{
+  thinking_newRoute();
 }
 
 function timer_init(timeObj)

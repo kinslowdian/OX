@@ -1,27 +1,44 @@
+var gameBoard;
+
+var Board = function()
+{
+
+};
+
+Board.prototype.init = function()
+{
+	this.ai = {};
+	this.ai_list = new Array();
+	this.ai_count = 0;
+	this.ai_stall = false;
+
+	this.ai_turn = 0;
+}
 
 function thinking_moveFirst()
 {
-	status.ai_list = new Array();
-	status.ai_count = 0;
-	status.ai_stall = false;
+	gameBoard = new Board();
+	gameBoard.init();
 
-	status.ai_list = thinking_random(thinking_arr);
+	gameBoard.ai_list = new Array();
+	gameBoard.ai_count = 0;
+	gameBoard.ai_stall = false;
 
-	thinking_newRoute();
+	gameBoard.ai_list = thinking_random(thinking_arr);
 }
 
 function thinking_newRoute()
 {
-	if(status.ai_stall)
+	if(gameBoard.ai_stall)
 	{
 		thinking_flustered();
 	}
 
 	else
 	{
-		status.ai = status.ai_list[status.ai_count];
+		gameBoard.ai = gameBoard.ai_list[gameBoard.ai_count];
 
-		thinking_apply();
+		thinking_move();
 	}
 }
 
@@ -35,11 +52,11 @@ function thinking_move()
   {
     var g = grid_set[i];
 
-    for(var j in thinking_arr[status.ai].move_arr)
+    for(var j in gameBoard.ai.move_arr)
     {
-	    if(g.num == thinking_arr[status.ai].move_arr[j])
+	    if(g.num == gameBoard.ai.move_arr[j])
 	    {
-	    	if(!g.populated)
+	    	if(g.populated)
 	    	{
 	    		attack = false;
 	    	}
@@ -49,20 +66,28 @@ function thinking_move()
 
   if(attack)
   {
+  	trace("GOOD");
   	// PLANT MOVE
-  	status.ai_turn = status.ai.move_arr[status.ai.move_num];
-  	status.ai.move_num++;
+  	gameBoard.ai_turn = gameBoard.ai.move_arr[gameBoard.ai.move_num];
+  	gameBoard.ai.move_num++;
+
+  	thinking_apply()
   }
 
   else
   {
-  	// FIND OTHER SEQUENCE
-  	status.ai_count ++;
+  	trace("CHANGE");
+  	gameBoard.ai_count ++;
 
   	// EXHAUSTED LIST
-  	if(status.ai_count == status.ai_list.length)
+  	if(gameBoard.ai_count == gameBoard.ai_list.length)
   	{
-  		status.ai_stall = true;
+  		gameBoard.ai_stall = true;
+  	}
+
+  	else
+  	{
+  		gameBoard.ai = gameBoard.ai_list[gameBoard.ai_count];
   	}
 
   	thinking_newRoute();
@@ -71,14 +96,16 @@ function thinking_move()
 
 function thinking_apply()
 {
-  var moveSelect = 0;
-  var box = grid_set[status.ai_turn];
+  var moveSelect = gameBoard.ai.move_arr[gameBoard.ai.move_num];
+	var box = grid_set[moveSelect].display;
 
   thinking_draw(box);
 }
 
 function thinking_flustered()
 {
+  trace("LOSING!!!");
+
   var moveList = new Array();
   var moveSelect = 0;
   var box;
@@ -112,6 +139,12 @@ function thinking_draw(box)
   game.targetBox.addEventListener("animationend", grid_update, false);
 
   grid_register(box, game.enemy);
+}
+
+function thinking_refresh()
+{
+	gameBoard.init();
+	gameBoard.ai_list = thinking_random(thinking_arr);
 }
 
 
