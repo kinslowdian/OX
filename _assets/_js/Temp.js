@@ -18,13 +18,8 @@ Board.prototype.init = function()
 function thinking_moveFirst()
 {
 	gameBoard = new Board();
-	gameBoard.init();
 
-	gameBoard.ai_list = new Array();
-	gameBoard.ai_count = 0;
-	gameBoard.ai_stall = false;
-
-	gameBoard.ai_list = thinking_random(thinking_arr);
+	thinking_refresh();
 }
 
 function thinking_newRoute()
@@ -145,6 +140,13 @@ function thinking_refresh()
 {
 	gameBoard.init();
 	gameBoard.ai_list = thinking_random(thinking_arr);
+
+	for(var i in gameBoard.ai_list)
+	{
+		gameBoard.ai_list[i].move_num = 0;
+	}
+
+	trace(gameBoard.ai_list);
 }
 
 
