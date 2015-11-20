@@ -6,6 +6,13 @@ var Logic = function(ob)
 	this.p = ob;
 	this.p_win = false;
 	this.draw = false;
+
+	this.ai = {};
+	this.ai_list = new Array();
+	this.ai_count = 0;
+	this.ai_stall = false;
+
+	this.ai_turn = 0;
 }
 
 Logic.prototype.result_check = function()
@@ -109,6 +116,17 @@ function thinking_init()
 
 	thinking_arr = rom.store.moveList.data;
 
-	trace(thinking_arr);
+	for(var i in thinking_arr)
+	{
+		thinking_arr[i].move_arr = thinking_random(thinking_arr[i].move_arr);
+	}
 
+	trace(thinking_arr);
+}
+
+function thinking_random(arr)
+{
+	arr.sort(function(){ return 0.5 - Math.random(); });
+
+	return arr
 }
