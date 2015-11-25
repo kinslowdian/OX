@@ -20,6 +20,8 @@ function main_init()
 
   thinking_init();
 
+  progress_init();
+
   game_run();
 }
 
@@ -156,11 +158,13 @@ function grid_update(event)
     if(game.result === "WIN")
     {
       alert("YOU WIN");
+      progress.update("W");
     }
 
     else if(game.result === "LOSE")
     {
       alert("YOU LOSE");
+      progress.update("L");
     }
 
     game.complete = true;
@@ -169,6 +173,7 @@ function grid_update(event)
   else if(status.draw)
   {
     alert("DRAW");
+    progress.update("D");
 
     game.complete = true;
   }

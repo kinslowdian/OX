@@ -2,6 +2,8 @@ var thinking_arr;
 
 var gameBoard;
 
+var progress;
+
 var Logic = function(ob)
 {
 	trace(ob);
@@ -79,7 +81,7 @@ Logic.prototype.result_check = function()
 	{
 		this.draw = true;
 	}
-}
+};
 
 Logic.prototype.result_translate = function()
 {
@@ -102,7 +104,7 @@ Logic.prototype.result_translate = function()
 	{
 		game.result = "";
 	}
-}
+};
 
 var Board = function()
 {
@@ -117,7 +119,48 @@ Board.prototype.init = function()
 	this.ai_stall = false;
 
 	this.ai_turn = 0;
-}
+};
+
+var Score = function()
+{
+
+};
+
+Score.prototype.init = function()
+{
+	this.counter_win 	= 0;
+	this.counter_lose = 0;
+	this.counter_draw	= 0;
+};
+
+Score.prototype.update = function(flag)
+{
+	switch(flag)
+	{
+		case "W":
+		{
+			this.counter_win ++;
+			break;
+		}
+
+		case "L":
+		{
+			this.counter_lose ++;
+			break;
+		}
+
+		case "D":
+		{
+			this.counter_draw ++;
+			break;
+		}
+
+		default :
+		{
+
+		}
+	}
+};
 
 
 function thinking_init()
@@ -277,4 +320,11 @@ function thinking_random(arr)
 	arr.sort(function(){ return 0.5 - Math.random(); });
 
 	return arr
+}
+
+function progress_init()
+{
+	progress = new Score();
+
+	progress.init();
 }
